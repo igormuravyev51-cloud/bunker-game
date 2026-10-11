@@ -24,19 +24,26 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython virtualenv
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          cmdline-tools-version: 11076708
-          packages: 'build-tools;33.0.2 platforms;android-33'
-          accept-android-sdk-licenses: true
-          log-accepted-android-sdk-licenses: false
+      - name: Accept Android SDK licenses
+        run: |
+          # Используем уже установленный sdkmanager
+          SDKMANAGER=$(find /usr/local/lib/android/sdk -name sdkmanager -type f | head -n 1)
+          echo "Found sdkmanager at: $SDKMANAGER"
+          yes | $SDKMANAGER --licenses || true
+          yes | $SDKMANAGER "build-tools;33.0.2" "platforms;android-33" || true
 
       - name: Build with Buildozer
         run: |
-          export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
-          export ANDROID_SDK_ROOT=$HOME/.buildozer/android/platform/android-sdk
+          # Указываем buildozer путь к уже установленному SDK
+          export ANDROID_HOME=/usr/local/lib/android/sdk
+          export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
           export PATH=$PATH:$HOME/.local/bin
+
+          # Проверяем, что buildozer видит SDK
+          ls -la $ANDROID_HOME/ || true
+          ls -la $ANDROID_HOME/build-tools/ || true
+
+          # Собираем
           yes | buildozer android debug 2>&1 | tee build.log
 
       - name: Upload APK
