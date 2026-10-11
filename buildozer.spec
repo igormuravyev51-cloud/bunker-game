@@ -1,6 +1,10 @@
 [app]
 # Название приложения (можно поменять)
 title = Bunker Game
+# Использовать новый путь к sdkmanager (для Buildozer 1.6+)
+android.sdk_path = /home/runner/.buildozer/android/platform/android-sdk
+android.accept_sdk_license = True
+android.skip_update = False
 
 # Короткое имя пакета (только строчные буквы, цифры и подчеркивания)
 package.name = bunkergame
