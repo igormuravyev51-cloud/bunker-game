@@ -46,6 +46,7 @@ orientation = portrait
 
 # Принимать лицензии SDK автоматически — ЭТО КЛЮЧЕВАЯ СТРОКА
 android.accept_sdk_license = True
+android.sdk_path = /usr/local/lib/android/sdk
 
 # Не пропускать обновление SDK (заставляет buildozer самому поставить sdkmanager)
 android.skip_update = False
