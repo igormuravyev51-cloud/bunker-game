@@ -1,12 +1,8 @@
 [app]
-# Название приложения (можно поменять)
+# Название приложения
 title = Bunker Game
-# Использовать новый путь к sdkmanager (для Buildozer 1.6+)
-android.sdk_path = /home/runner/.buildozer/android/platform/android-sdk
-android.accept_sdk_license = True
-android.skip_update = False
 
-# Короткое имя пакета (только строчные буквы, цифры и подчеркивания)
+# Короткое имя пакета (только строчные буквы, цифры, подчеркивания)
 package.name = bunkergame
 
 # Домен (стандартный для тестов)
@@ -15,40 +11,62 @@ package.domain = org.example
 # Где лежат исходники (папка, где main.py)
 source.dir = .
 
-# Список расширений, которые нужно включить в сборку (важно для HTML, CSS, JS, JSON)
+# Список расширений, которые нужно включить в APK
 source.include_exts = py,png,jpg,kv,json,html,css,js,atlas
+
+# Исключения (не тащим в APK лишнее)
+source.exclude_dirs = tests,bin,.git,.github,__pycache__,venv,env
+source.exclude_patterns = *.pyc,*.pyo,*.log
 
 # Версия приложения
 version = 0.1
 
-# Зависимости Python. Здесь мы указываем python3 и ваши библиотеки
+# Зависимости Python
 requirements = python3,aiohttp,python-socketio
 
-# ГЛАВНАЯ НАСТРОЙКА: используем WebView вместо Kivy
-# Это позволит открыть ваш веб-сервер в нативном окне Android [citation:1][citation:3]
+# Bootstrap — WebView (наш веб-сервер показываем в нативном окне)
 p4a.bootstrap = webview
 
-# Порт, который будет слушать ваш сервер внутри приложения
-# По умолчанию WebView Bootstrap подключается к 5000
+# Порт, который слушает наш aiohttp-сервер внутри приложения
 android.port = 5000
 
-# Разрешения (обязательно INTERNET)
+# Разрешения
 android.permissions = INTERNET
 
-# Версия Android API (для стабильности)
+# Версия Android API
 android.api = 33
+android.minapi = 21
+android.ndk_api = 21
 
 # Архитектуры
 android.archs = arm64-v8a, armeabi-v7a
 
-# Ориентация экрана (portrait для телефона)
+# Ориентация экрана
 orientation = portrait
 
-# Иконка (если есть, иначе закомментируйте)
+# Принимать лицензии SDK автоматически — ЭТО КЛЮЧЕВАЯ СТРОКА
+android.accept_sdk_license = True
+
+# Не пропускать обновление SDK (заставляет buildozer самому поставить sdkmanager)
+android.skip_update = False
+
+# Иконка (раскомментируй, если положишь icon.png в корень)
 # icon.filename = %(source.dir)s/icon.png
 
-# Заставка (можно не использовать)
+# Заставка (раскомментируй, если положишь presplash.png в корень)
 # presplash.filename = %(source.dir)s/presplash.png
 
-# Отключаем лишние зависимости, чтобы сборка была быстрее
+# Разрешить бэкап
 android.allow_backup = True
+
+# Отключаем лишние проверки, чтобы сборка не падала
+android.check_sdk = False
+
+# Логи buildozer
+log_level = 2
+
+# Папка для готового APK
+bin_dir = ./bin
+
+# Кэш
+build_dir = ./.buildozer
