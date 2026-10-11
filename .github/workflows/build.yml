@@ -24,32 +24,57 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython virtualenv
 
+      - name: Prepare Android SDK (sdkmanager in tools/bin)
+        run: |
+          export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
+          export ANDROID_SDK_ROOT=$ANDROID_HOME
+          mkdir -p $ANDROID_HOME
+
+          cd $HOME
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdtools.zip
+          unzip -q cmdtools.zip
+
+          # Копируем sdkmanager в tools/bin (старый путь, который ищет buildozer)
+          mkdir -p $ANDROID_HOME/tools/bin
+          cp -r $HOME/cmdline-tools/* $ANDROID_HOME/tools/ 2>/dev/null || true
+          if [ -d "$ANDROID_HOME/tools/cmdline-tools" ]; then
+            mv $ANDROID_HOME/tools/cmdline-tools/* $ANDROID_HOME/tools/bin/ 2>/dev/null || true
+            rmdir $ANDROID_HOME/tools/cmdline-tools 2>/dev/null || true
+          fi
+          if [ -d "$ANDROID_HOME/tools/bin/bin" ]; then
+            mv $ANDROID_HOME/tools/bin/bin/* $ANDROID_HOME/tools/bin/ 2>/dev/null || true
+            rmdir $ANDROID_HOME/tools/bin/bin 2>/dev/null || true
+          fi
+          chmod +x $ANDROID_HOME/tools/bin/*
+
+          # Также в cmdline-tools/latest
+          mkdir -p $ANDROID_HOME/cmdline-tools/latest
+          cp -r $HOME/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/ 2>/dev/null || true
+          if [ -d "$ANDROID_HOME/cmdline-tools/latest/cmdline-tools" ]; then
+            mv $ANDROID_HOME/cmdline-tools/latest/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/ 2>/dev/null || true
+            rmdir $ANDROID_HOME/cmdline-tools/latest/cmdline-tools 2>/dev/null || true
+          fi
+
+          # Проверяем
+          ls -la $ANDROID_HOME/tools/bin/
+          $ANDROID_HOME/tools/bin/sdkmanager --version || echo "sdkmanager version check failed"
+
+          # Лицензии
+          yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses || true
+
+          # Устанавливаем нужные пакеты
+          yes | $ANDROID_HOME/tools/bin/sdkmanager "build-tools;33.0.2" "platforms;android-33" || true
+
       - name: Build with Buildozer
         run: |
           export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
+          export ANDROID_SDK_ROOT=$ANDROID_HOME
           export PATH=$PATH:$HOME/.local/bin
 
-          # Скачиваем cmdline-tools
-          mkdir -p $ANDROID_HOME/cmdline-tools
-          if [ ! -d "$ANDROID_HOME/cmdline-tools/latest" ]; then
-            wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
-            unzip -q cmdline-tools.zip -d $ANDROID_HOME/cmdline-tools
-            mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
-          fi
+          # Проверяем ещё раз перед сборкой
+          ls -la $ANDROID_HOME/tools/bin/ || true
+          ls -la $ANDROID_HOME/build-tools/ || true
 
-          # Симлинки из старого пути в новый
-          mkdir -p $ANDROID_HOME/tools/bin
-          ln -sf $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
-          ln -sf $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager $ANDROID_HOME/tools/bin/avdmanager
-          chmod +x $ANDROID_HOME/tools/bin/*
-
-          # Принимаем лицензии
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-
-          # Устанавливаем build-tools вручную
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;33.0.2" "platforms;android-33" || true
-
-          # Собираем APK
           yes | buildozer android debug 2>&1 | tee build.log
 
       - name: Upload APK
