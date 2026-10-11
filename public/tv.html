@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Бункер — ТВ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- ВСТУПЛЕНИЕ -->
+  <div class="intro hidden" id="intro">
+    <div class="intro-bg"></div>
+    <div class="intro-content">
+      <div class="intro-icon pulse" id="intro-icon">☢️</div>
+      <div class="intro-tagline" id="intro-tagline">ПОСЛЕДНИЙ ДЕНЬ ЧЕЛОВЕЧЕСТВА</div>
+      <div class="intro-title" id="intro-title">Ядерная война</div>
+      <div class="intro-desc" id="intro-desc"></div>
+      <div class="intro-timer" id="intro-timer">10</div>
+      <button class="btn btn-big" id="btn-intro-skip">В БУНКЕР →</button>
+    </div>
+  </div>
+
+  <!-- ОСНОВНОЙ ЭКРАН -->
+  <div id="main" class="hidden">
+
+    <div class="tv-header">
+      <div>
+        <div class="tv-title">☢️ <span class="accent">БУНКЕР</span></div>
+        <div class="tv-round" id="round">Ожидание игроков...</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px">
+        <button class="btn btn-big" id="btn-start" style="display:none">🎬 НАЧАТЬ ИГРУ</button>
+        <button class="btn btn-big btn-danger" id="btn-vote" style="display:none">🗳️ К ГОЛОСОВАНИЮ</button>
+        <button class="btn btn-big" id="btn-next-round" style="display:none">▶️ СЛЕДУЮЩИЙ РАУНД</button>
+        <button class="btn btn-big btn-danger" id="btn-resolve" style="display:none">⚡ ПРОДОЛЖИТЬ</button>
+        <div class="tv-timer" id="timer"></div>
+      </div>
+    </div>
+
+    <div class="disaster-panel hidden" id="disaster-panel">
+      <div class="disaster-icon" id="disaster-icon">☢️</div>
+      <div class="disaster-info">
+        <div class="disaster-tagline" id="disaster-tagline">—</div>
+        <div class="disaster-name" id="disaster-name">—</div>
+        <div class="disaster-desc" id="disaster-desc">—</div>
+      </div>
+    </div>
+
+    <div class="bunker-panel hidden" id="bunker-panel">
+      <div class="bunker-title">🏠 БУНКЕР</div>
+      <div class="bunker-grid" id="bunker-grid"></div>
+    </div>
+
+    <div class="vote-panel hidden" id="vote-panel">
+      <div class="vote-title" id="vote-title">🗳️ КОГО ВЫГНАТЬ ИЗ БУНКЕРА?</div>
+      <div class="vote-subtitle" id="vote-subtitle">Голосов: 0 / 0</div>
+      <div class="vote-grid" id="vote-grid"></div>
+    </div>
+
+    <div class="vote-result hidden" id="vote-result">
+      <div class="vote-result-icon" id="vote-result-icon">💀</div>
+      <div class="vote-result-name" id="vote-result-name">—</div>
+      <div class="vote-result-text" id="vote-result-text">—</div>
+    </div>
+
+    <div class="final-panel hidden" id="final-panel">
+      <div class="final-header">
+        <div class="final-title">🚪 БУНКЕР ЗАКРЫТ</div>
+        <div class="final-subtitle" id="final-subtitle">Проверка на прочность</div>
+      </div>
+      <div class="final-grid" id="final-grid"></div>
+    </div>
+
+    <div class="epilogues-panel hidden" id="epilogues-panel">
+      <div class="epilogues-title">📜 ЭПИЛОГИ ВЫЖИВШИХ</div>
+      <div class="epilogues-grid" id="epilogues-grid"></div>
+    </div>
+
+    <div class="players-grid" id="players"></div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="/js/tv.js"></script>
+</body>
+</html>

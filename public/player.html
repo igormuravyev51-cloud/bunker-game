@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Бункер — Игрок</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="lobby" id="lobby">
+    <div class="lobby-logo">☢️</div>
+    <h1>БУНКЕР</h1>
+    <div class="subtitle">Введи имя и сделай селфи</div>
+
+    <div class="avatar-picker">
+      <div class="avatar-preview" id="avatar-preview">
+        <div class="avatar-placeholder">📷</div>
+      </div>
+      <button class="btn btn-ghost" id="btn-photo">Сделать фото</button>
+      <input type="file" accept="image/*" capture="user" id="file-input" class="hidden">
+    </div>
+
+    <input type="text" id="name-input" placeholder="Твоё имя" maxlength="20" autocomplete="off">
+    <button class="btn btn-big" id="btn-join">ВОЙТИ В ИГРУ</button>
+  </div>
+
+  <div id="game" class="hidden">
+
+    <div class="turn-banner hidden" id="turn-banner">🎬 ТВОЙ ХОД</div>
+    <div class="vote-banner hidden" id="vote-banner">🗳️ ГОЛОСОВАНИЕ</div>
+
+    <div class="player-header">
+      <div class="avatar-wrap">
+        <img class="avatar-img" id="my-photo" alt="">
+        <div class="avatar-emoji" id="my-avatar">🦊</div>
+      </div>
+      <div class="header-info">
+        <div class="name" id="my-name">—</div>
+        <div class="status" id="my-status">В игре</div>
+      </div>
+      <button class="btn btn-ghost btn-small" id="btn-change-photo">📷</button>
+    </div>
+
+    <button class="btn btn-big hidden" id="btn-next-turn" style="margin-bottom:16px">
+      ➡️ ЗАКОНЧИТЬ ХОД
+    </button>
+
+    <div class="vote-list hidden" id="vote-list"></div>
+
+    <div class="section-title">🎴 Мои карты</div>
+    <div class="cards-list" id="my-cards"></div>
+
+    <div class="section-title">⚡ Способности</div>
+    <div class="abilities-list" id="my-abilities"></div>
+
+    <div class="section-title">✉️ Анонимные записки</div>
+    <div class="notes-panel" id="notes-panel">
+      <button class="btn btn-big btn-ghost" id="btn-send-note">✉️ Отправить записку</button>
+      <div class="notes-list" id="notes-list"></div>
+    </div>
+
+    <div class="section-title">👥 Другие игроки</div>
+    <div class="cards-list" id="others"></div>
+
+    <div class="final-panel hidden" id="final-panel">
+      <div class="section-title">🏆 ФИНАЛ</div>
+      <div style="color:var(--text-dim);text-align:center;padding:20px" id="final-hint">
+        Смотри на ТВ экран
+      </div>
+      <div class="my-epilogue hidden" id="my-epilogue"></div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА СПОСОБНОСТИ -->
+  <div class="modal hidden" id="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-icon" id="modal-icon">🦹</div>
+        <div>
+          <div class="modal-title" id="modal-title">Вор</div>
+          <div class="modal-desc" id="modal-desc">Украсть карту</div>
+        </div>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="modal-cancel">Отмена</button>
+        <button class="btn" id="modal-confirm" disabled>Применить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА ОПИСАНИЯ -->
+  <div class="modal hidden" id="desc-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-icon" id="desc-icon">🦹</div>
+        <div>
+          <div class="modal-tagline" id="desc-tagline">—</div>
+          <div class="modal-title" id="desc-title">Вор</div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="desc-text" id="desc-text">—</div>
+        <div class="desc-timing" id="desc-timing"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="desc-close">Понятно</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА ЗАПИСКИ -->
+  <div class="modal hidden" id="note-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-icon">✉️</div>
+        <div>
+          <div class="modal-tagline">АНОНИМНОЕ СООБЩЕНИЕ</div>
+          <div class="modal-title" id="note-title">Кому?</div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-label">Выбери получателя:</div>
+        <div class="target-grid" id="note-targets"></div>
+        <div class="modal-label">Текст записки:</div>
+        <textarea id="note-text" class="note-input" maxlength="200" placeholder="Напиши что-то... (макс 200)"></textarea>
+        <div class="note-hint">Получатель не узнает, кто отправил. Все узнают только сам факт отправки.</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="note-cancel">Отмена</button>
+        <button class="btn" id="note-send" disabled>Отправить</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="/js/player.js"></script>
+</body>
+</html>
